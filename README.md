@@ -87,17 +87,6 @@ Buat bucket di Supabase Dashboard → Storage → New Bucket:
 npm run dev
 ```
 
-Akses:
-- Website: `http://localhost:3000`
-- Admin: `http://localhost:3000/admin/login`
-
-## Deploy ke Vercel
-
-1. Push project ke GitHub.
-2. Import repo di Vercel.
-3. Set **Environment Variables** yang sama di Vercel Dashboard → Settings → Environment Variables.
-4. Deploy.
-
 ## Admin Panel
 
 - Login di `/admin/login` dengan password dari `ADMIN_PASSWORD`.
@@ -106,9 +95,5 @@ Akses:
 - **Galeri**: Tambah / Edit / Hapus galeri + upload foto.
 - **Info Desa**: Edit identitas, sejarah, visi-misi, timeline, kontak, sosial media, foto hero/sejarah.
 
-## Catatan Sistem
 
-- **Fallback data**: Kalau env Supabase belum diisi, website tetap jalan pakai data dari folder `/data`.
-- **Forum**: DISKUSI tidak masuk ke Supabase. Data thread + komentar disimpan di localStorage browser (demo).
-- **revalidatePath**: Setiap create/update/delete di API route secara otomatis merefresh cache halaman publik.
-- **Admin foto upload**: Hanya jpg/png/webp, max 5MB. Foto baru disimpan ke bucket `desa-images`, foto lama otomatis dihapus dari storage saat diganti.
+
