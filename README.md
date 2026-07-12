@@ -1,36 +1,114 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Website Jorong Padang Panjang, Nagari Pariangan
 
-## Getting Started
+Portal resmi informasi dan layanan masyarakat Jorong Padang Panjang — bagian dari Nagari Tuo Minangkabau.
 
-First, run the development server:
+Dibangun dengan **Next.js 14 (App Router) + Tailwind CSS**, data disimpan di **Supabase** (PostgreSQL + Storage).
+
+## Fitur
+
+- **Beranda**: Hero parallax, produk unggulan, galeri kegiatan, CTA kontak.
+- **Profil**: Sejarah, Visi-Misi, Peta + batas wilayah.
+- **Produk**: Galeri produk unggulan lokal dengan filter dan detail modal.
+- **Galeri**: Galeri foto kegiatan dengan filter dan lightbox.
+- **Forum**: Forum diskusi warga (localStorage).
+- **Kontak**: Alamat, kontak, sosial media, Google Maps, form pesan.
+- **Admin Panel**: Login → Dashboard → CRUD Produk, Galeri, Info Desa via `/admin`.
+
+## Tech Stack
+
+- Next.js 14 (App Router)
+- Tailwind CSS (Material 3 token)
+- Supabase (PostgreSQL + Storage)
+- Material Symbols (icon)
+- Framer Motion (tersedia, belum banyak dipakai)
+
+## Struktur Project
+
+```
+├── app/
+│   ├── admin/          # Admin panel (login, dashboard, produk, galeri, info-desa)
+│   ├── api/admin/      # API routes (login, logout, upload, CRUD produk/galeri/info-desa)
+│   ├── forum/          # Forum diskusi (client, localStorage)
+│   ├── galeri/         # Galeri page (async server + GaleriClient)
+│   ├── kontak/         # Kontak page (async server + KontakClient)
+│   ├── produk/         # Produk page (async server + ProdukClient)
+│   ├── profil/         # Profil page (async server + ProfileTabs)
+│   ├── page.jsx        # Beranda (async server + HomeClient)
+│   ├── layout.jsx      # Root layout + metadata
+│   └── globals.css     # Global styles + animations
+├── components/         # UI components
+├── data/               # Data fallback lokal (pakai kalau Supabase belum terisi)
+├── lib/                # Supabase client, auth, queries
+├── supabase/           # Schema SQL + Seed SQL
+└── middleware.js       # Proteksi route /admin/* (Edge)
+```
+
+## Setup
+
+### 1. Install dependencies
+
+```bash
+npm install
+```
+
+### 2. Isi environment variables
+
+Copy `.env.example` ke `.env.local` dan isi:
+
+```
+NEXT_PUBLIC_SUPABASE_URL=https://xxxxxxxx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
+SUPABASE_SERVICE_ROLE_KEY=eyJ...
+ADMIN_PASSWORD=password_anda
+ADMIN_SESSION_TOKEN=token_stabil_64_char  (opsional, untuk session persist)
+```
+
+> [!IMPORTANT]
+> **ADMIN_SESSION_TOKEN wajib diisi** agar middleware Edge bisa verifikasi cookie.
+> Kalau kosong, middleware akan selalu redirect ke login. Generate nilai acak 64 karakter.
+
+### 3. Setup Supabase Database
+
+1. Buka Supabase Dashboard → SQL Editor.
+2. Jalankan [supabase/schema.sql](file:///d:/Web%20Desa/desa-sejahtera-next/supabase/schema.sql) — buat tabel & RLS policies.
+3. Jalankan [supabase/seed.sql](file:///d:/Web%20Desa/desa-sejahtera-next/supabase/seed.sql) — isi data awal Jorong Padang Panjang.
+
+### 4. Setup Storage Bucket
+
+Buat bucket di Supabase Dashboard → Storage → New Bucket:
+- **Name**: `desa-images`
+- **Public**: ✅ (untuk READ)
+- **File size limit**: 5MB
+- **Allowed MIME types**: `image/jpeg`, `image/png`, `image/webp`
+
+### 5. Jalankan
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Akses:
+- Website: `http://localhost:3000`
+- Admin: `http://localhost:3000/admin/login`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Deploy ke Vercel
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Push project ke GitHub.
+2. Import repo di Vercel.
+3. Set **Environment Variables** yang sama di Vercel Dashboard → Settings → Environment Variables.
+4. Deploy.
 
-## Learn More
+## Admin Panel
 
-To learn more about Next.js, take a look at the following resources:
+- Login di `/admin/login` dengan password dari `ADMIN_PASSWORD`.
+- **Dashboard**: ringkasan jumlah data.
+- **Produk**: Tambah / Edit / Hapus produk + upload foto.
+- **Galeri**: Tambah / Edit / Hapus galeri + upload foto.
+- **Info Desa**: Edit identitas, sejarah, visi-misi, timeline, kontak, sosial media, foto hero/sejarah.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Catatan Sistem
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Fallback data**: Kalau env Supabase belum diisi, website tetap jalan pakai data dari folder `/data`.
+- **Forum**: DISKUSI tidak masuk ke Supabase. Data thread + komentar disimpan di localStorage browser (demo).
+- **revalidatePath**: Setiap create/update/delete di API route secara otomatis merefresh cache halaman publik.
+- **Admin foto upload**: Hanya jpg/png/webp, max 5MB. Foto baru disimpan ke bucket `desa-images`, foto lama otomatis dihapus dari storage saat diganti.
