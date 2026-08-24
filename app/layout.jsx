@@ -11,7 +11,7 @@ const inter = Inter({
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  weight: ["600", "700"],
+  weight: ["400", "500", "600", "700", "800"],
   variable: "--font-plus-jakarta",
 });
 
@@ -36,7 +36,10 @@ export default function RootLayout({ children }) {
           rel="stylesheet"
         />
       </head>
-      <body className="bg-background text-on-background antialiased font-body-md text-body-md min-h-screen flex flex-col">
+      <body
+        className="bg-background text-text-primary antialiased min-h-screen flex flex-col"
+        style={{ fontFamily: "'Plus Jakarta Sans', Inter, sans-serif" }}
+      >
         <Navbar />
         <main className="flex-grow">{children}</main>
         <Footer />

@@ -1,55 +1,50 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useScroll, useTransform, motion, useReducedMotion } from "framer-motion";
 
 /**
- * Hero dengan parallax ringan: background image bergerak lebih lambat
- * saat di-scroll. Matikan di mobile (<=640px) untuk performa.
+ * Hero dengan parallax menggunakan Framer Motion.
+ * Mendukung prefers-reduced-motion untuk aksesibilitas.
+ * Height: min-h-screen dengan overlay gradient Cyprus.
  */
 export default function HeroParallax({ imageUrl, children, overlayClass = "" }) {
-  const [offset, setOffset] = useState(0);
+  const { scrollY } = useScroll();
+  const shouldReduceMotion = useReducedMotion();
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    // Skip parallax di mobile
-    if (window.matchMedia("(max-width: 640px)").matches) return;
-
-    let raf = 0;
-    const onScroll = () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
-        const y = window.scrollY;
-        // Hanya berlaku saat hero masih terlihat (y < ~700)
-        if (y < 700) setOffset(y * 0.35);
-      });
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      cancelAnimationFrame(raf);
-    };
-  }, []);
+  // Parallax: bergerak dari y=0 ke y=180 saat scroll mencapai 600px
+  const heroY = useTransform(scrollY, [0, 600], [0, shouldReduceMotion ? 0 : 180]);
 
   return (
-    <div className="relative w-full h-[500px] flex items-center justify-center overflow-hidden">
+    <div className="relative w-full min-h-screen flex items-center justify-center overflow-hidden">
       {/* Parallax background */}
+      <motion.div
+        style={{ y: heroY }}
+        className="absolute inset-0 z-0 scale-110"
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={imageUrl}
+          alt="Hero Background"
+          className="w-full h-full object-cover"
+        />
+      </motion.div>
+
+      {/* Overlay gradient Cyprus */}
       <div
-        className="absolute inset-0 z-0 bg-cover bg-center"
-        style={{
-          backgroundImage: `url('${imageUrl}')`,
-          transform: `translate3d(0, ${offset}px, 0) scale(1.1)`,
-          willChange: "transform",
-        }}
+        className={`absolute inset-0 z-10 ${overlayClass}`}
         aria-hidden="true"
       />
-      {/* Overlay */}
-      <div className={`absolute inset-0 z-10 ${overlayClass}`} aria-hidden="true" />
+
       {/* Konten */}
       <div className="relative z-20 w-full">{children}</div>
-      {/* Fade transition bawah (B2) */}
+
+      {/* Fade transition bawah */}
       <div
-        className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent to-surface z-15 pointer-events-none"
+        className="absolute bottom-0 left-0 right-0 h-32 z-15 pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(to bottom, transparent, rgba(250,250,250,0.9) 100%)",
+        }}
         aria-hidden="true"
       />
     </div>

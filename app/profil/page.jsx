@@ -12,13 +12,13 @@ export default async function ProfilPage() {
 
   return (
     <>
-      {/* Page Header */}
-      <header className="bg-surface-container-low py-lg border-b border-outline-variant/30">
-        <div className="max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop text-center">
-          <h1 className="font-hero-lg-mobile md:font-hero-lg text-hero-lg-mobile md:text-hero-lg text-on-surface mb-sm">
+      {/* Page Header — pt-[72px] agar tidak tertutup navbar fixed */}
+      <header className="pt-[72px] bg-surface-container-low pb-10 border-b border-border">
+        <div className="max-w-[1280px] mx-auto px-4 md:px-8 text-center">
+          <h1 className="font-heading font-extrabold text-text-primary mb-3" style={{ fontSize: "clamp(2rem, 5vw, 3rem)", letterSpacing: "-0.02em" }}>
             Profil Jorong
           </h1>
-          <p className="font-body-md text-body-md text-on-surface-variant max-w-2xl mx-auto">
+          <p className="text-base text-text-secondary max-w-2xl mx-auto leading-relaxed">
             Mengenal lebih dekat sejarah, visi-misi, dan letak geografis Jorong Padang
             Panjang Pariangan sebagai bagian dari Nagari Tuo Minangkabau yang lestari dan mandiri.
           </p>

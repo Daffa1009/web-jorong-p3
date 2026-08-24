@@ -51,7 +51,8 @@ export async function POST(request) {
     const ext = EXT_MAP[type] || "jpg";
     const random = Math.random().toString(36).slice(2, 10);
     const fileName = `${Date.now()}-${random}.${ext}`;
-    const filePath = `uploads/${fileName}`;
+    const folder = formData.get("folder") || "uploads";
+    const filePath = `${folder}/${fileName}`;
 
     // Upload ke Supabase Storage
     const arrayBuffer = await file.arrayBuffer();

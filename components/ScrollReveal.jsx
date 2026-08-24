@@ -1,37 +1,44 @@
-"use client";
+'use client'
+import { motion, useInView, useReducedMotion } from 'framer-motion'
+import { useRef } from 'react'
 
-import { useEffect, useRef, useState } from "react";
-
-export default function ScrollReveal({ as: Tag = "div", delay = 0, className = "", children, ...rest }) {
-  const ref = useRef(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const node = ref.current;
-    if (!node) return;
-    const obs = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setVisible(true);
-            obs.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.15, rootMargin: "0px 0px -40px 0px" }
-    );
-    obs.observe(node);
-    return () => obs.disconnect();
-  }, []);
-
+export default function ScrollReveal({ 
+  children, 
+  direction = 'up',  // 'up' | 'down' | 'left' | 'right'
+  delay = 0,
+  className = ''
+}) {
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true, margin: '-100px' })
+  const shouldReduceMotion = useReducedMotion()
+  
+  const variants = {
+    hidden: {
+      opacity: 0,
+      y: shouldReduceMotion ? 0 : (direction === 'up' ? 40 : direction === 'down' ? -40 : 0),
+      x: shouldReduceMotion ? 0 : (direction === 'left' ? 40 : direction === 'right' ? -40 : 0),
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      x: 0,
+      transition: shouldReduceMotion ? { duration: 0.1 } : {
+        duration: 0.6,
+        delay: delay,
+        ease: [0.25, 0.1, 0.25, 1],
+      }
+    }
+  }
+  
   return (
-    <Tag
+    <motion.div
       ref={ref}
-      className={`animate-on-scroll ${visible ? "is-visible" : ""} ${className}`}
-      style={{ transitionDelay: `${delay}ms` }}
-      {...rest}
+      variants={variants}
+      initial="hidden"
+      animate={isInView ? 'visible' : 'hidden'}
+      className={className}
     >
       {children}
-    </Tag>
-  );
+    </motion.div>
+  )
 }

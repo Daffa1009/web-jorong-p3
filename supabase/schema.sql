@@ -48,11 +48,15 @@ CREATE TABLE IF NOT EXISTS desa_info (
   whatsapp TEXT,
   foto_hero_url TEXT,
   foto_sejarah_url TEXT,
-  timeline JSONB DEFAULT '[]'::jsonb
+  timeline JSONB DEFAULT '[]'::jsonb,
+  peta_embed_url TEXT
 );
 
 -- Pastikan selalu ada row id=1 (upsert no-op kalau row sudah ada)
 INSERT INTO desa_info (id) VALUES (1) ON CONFLICT (id) DO NOTHING;
+
+-- Migrasi aman untuk database lama: tambah kolom peta_embed_url jika belum ada
+ALTER TABLE desa_info ADD COLUMN IF NOT EXISTS peta_embed_url TEXT;
 
 -- ============================================================================
 -- ROW LEVEL SECURITY (RLS)

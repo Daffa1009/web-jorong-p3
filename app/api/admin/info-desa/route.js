@@ -4,6 +4,7 @@
 
 import { requireAdmin } from "@/lib/auth";
 import { supabaseAdmin, isAdminSupabaseConfigured, extractStoragePath, STORAGE_BUCKET } from "@/lib/supabase";
+import { normalizePetaEmbedUrl } from "@/lib/peta-utils";
 import { revalidatePath } from "next/cache";
 
 export async function GET(request) {
@@ -54,6 +55,7 @@ export async function PUT(request) {
       foto_hero_url,
       foto_sejarah_url,
       timeline,
+      peta_embed_url,
     } = body;
 
     // Ambil data lama untuk hapus foto yang diganti
@@ -79,6 +81,7 @@ export async function PUT(request) {
       foto_hero_url,
       foto_sejarah_url,
       timeline: timeline || null,
+      peta_embed_url: normalizePetaEmbedUrl(peta_embed_url) || null,
     };
 
     const { data, error } = await supabaseAdmin

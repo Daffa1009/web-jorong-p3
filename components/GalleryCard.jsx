@@ -1,34 +1,40 @@
 "use client";
 
 export default function GalleryCard({ item, onClick }) {
-  const gambar = item.foto_url || item.foto || "";
+  const coverFoto = item.foto_cover || item.foto_url || item.foto || "";
+  const totalPhotos = 1 + (item.fotos ? item.fotos.length : 0);
 
   return (
-    <div className="gallery-card bg-surface-container-lowest rounded-lg overflow-hidden shadow-sm border border-outline-variant/20">
-      <div className="h-[180px] overflow-hidden">
+    <div
+      onClick={onClick}
+      className="gallery-card group bg-white rounded-2xl overflow-hidden shadow-card border border-border cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-medium"
+    >
+      <div className="relative overflow-hidden" style={{ height: "200px" }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          className="w-full h-full object-cover card-zoom-img"
-          src={gambar || "https://picsum.photos/800/600?random=30"}
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.07]"
+          src={coverFoto || "https://picsum.photos/800/600?random=30"}
           alt={`Foto ${item.judul}`}
         />
-      </div>
-      <div className="p-md flex flex-col gap-2">
-        <span className="px-2 py-0.5 text-[11px] rounded-full bg-black/10 text-on-surface font-label-sm">
+        {/* Badge Jumlah Foto */}
+        <div className="absolute bottom-2 right-2 bg-black/70 backdrop-blur-sm text-white px-2.5 py-1 rounded-full text-[11px] flex items-center gap-1 shadow-sm">
+          <span>📷</span>
+          <span>{totalPhotos} foto</span>
+        </div>
+        {/* Badge kategori */}
+        <div className="absolute top-3 left-3 px-2.5 py-0.5 rounded-full text-[11px] font-semibold text-white bg-primary/90">
           {item.kategori}
-        </span>
-        <h3 className="font-label-sm text-label-sm font-bold text-on-surface line-clamp-2">
+        </div>
+      </div>
+
+      <div className="p-5 flex flex-col gap-1.5">
+        <h3 className="font-heading font-semibold text-text-primary line-clamp-2 text-sm leading-snug group-hover:text-primary transition-colors">
           {item.judul}
         </h3>
-        <p className="font-body-md text-body-md text-on-surface-variant text-xs">
-          {item.tanggal || "-"}
-        </p>
-        <button
-          onClick={onClick}
-          className="mt-2 flex items-center justify-center gap-1 bg-surface hover:bg-surface-variant text-primary font-label-sm px-3 py-1.5 rounded-lg transition-colors"
-        >
-          <span className="material-symbols-outlined text-[18px]">zoom_in</span>
-          Lihat
-        </button>
+        <div className="flex items-center gap-1 text-text-muted text-[11px] mt-0.5">
+          <span className="material-symbols-outlined text-[13px]">calendar_today</span>
+          <span>{item.tanggal || "-"}</span>
+        </div>
       </div>
     </div>
   );

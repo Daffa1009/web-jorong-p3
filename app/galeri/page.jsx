@@ -15,14 +15,17 @@ export default async function GaleriPage() {
 
   return (
     <>
-      {/* Header */}
-      <header className="h-[150px] bg-gradient-to-r from-surface-container to-surface-container-low flex flex-col justify-center items-center text-center px-margin-mobile relative overflow-hidden">
-        <div className="absolute inset-0 bg-primary/5 pointer-events-none"></div>
+      {/* Header — pt-[72px] agar tidak tertutup navbar fixed */}
+      <header className="pt-[72px] h-auto py-12 bg-gradient-to-r from-surface-container-low to-background flex flex-col justify-center items-center text-center px-4 relative overflow-hidden">
+        <div className="absolute inset-0 bg-primary/5 pointer-events-none" />
         <div className="relative z-10 max-w-2xl mx-auto">
-          <h1 className="font-section-title text-[28px] font-bold text-on-surface mb-2">
+          <h1
+            className="font-heading font-bold text-text-primary mb-2"
+            style={{ fontSize: "clamp(1.75rem, 4vw, 2rem)", letterSpacing: "-0.01em" }}
+          >
             Galeri Kegiatan
           </h1>
-          <p className="font-body-md text-on-surface-variant text-body-md">
+          <p className="text-text-secondary">
             Jelajahi setiap momen dan aktivitas dari Jorong Padang Panjang, Nagari
             Pariangan yang memajukan kebersamaan dan kemandirian.
           </p>

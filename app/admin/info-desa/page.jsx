@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import ImageUpload from "@/components/ImageUpload";
 import { adminFetch } from "@/lib/admin-fetch";
+import { normalizePetaEmbedUrl } from "@/lib/peta-utils";
 
 const KATEGORI_OPTIONS = ["Sosial Kepemudaan", "Pertanian & Ekonomi", "Pemerintahan", "Budaya", "Infrastruktur"];
 
@@ -23,6 +24,7 @@ const DEFAULT_FORM = {
   foto_hero_url: "",
   foto_sejarah_url: "",
   timeline: [],
+  peta_embed_url: "",
 };
 
 export default function AdminInfoDesaPage() {
@@ -31,6 +33,9 @@ export default function AdminInfoDesaPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+
+  // URL preview untuk iframe: hasil normalisasi dari input admin
+  const petaEmbedPreview = normalizePetaEmbedUrl(form.peta_embed_url);
 
   useEffect(() => {
     adminFetch("/api/admin/info-desa")
@@ -43,6 +48,7 @@ export default function AdminInfoDesaPage() {
             misi: Array.isArray(d.data.misi) ? d.data.misi : [],
             timeline: Array.isArray(d.data.timeline) ? d.data.timeline : [],
             jam_operasional: d.data.jam_operasional || DEFAULT_FORM.jam_operasional,
+            peta_embed_url: d.data.peta_embed_url || "",
           });
         }
       })
@@ -111,7 +117,7 @@ export default function AdminInfoDesaPage() {
         Info Desa
       </h1>
       <p className="font-body-md text-body-md text-on-surface-variant mb-lg">
-        Edit identitas, sejarah, visi-misi, kontak, dan media.
+        Edit identitas, sejarah, visi-misi, kontak, peta, dan media.
       </p>
 
       <form onSubmit={handleSubmit} className="max-w-[900px] space-y-xl">
@@ -372,6 +378,51 @@ export default function AdminInfoDesaPage() {
                 placeholder="https://wa.me/62..."
               />
             </Field>
+          </div>
+        </section>
+
+        {/* Peta Lokasi */}
+        <section className="bg-surface-container-lowest rounded-xl p-md shadow-sm border border-outline-variant/20">
+          <h2 className="font-label-sm text-label-sm font-bold text-on-surface mb-md">
+            Peta Lokasi
+          </h2>
+          <p className="text-on-surface-variant text-sm leading-relaxed mb-3">
+            Cara mendapatkan URL embed: buka Google Maps → cari lokasi → Share →
+            Embed a map → salin nilai dari <code>src=&quot;...&quot;</code> ke kolom di bawah.
+          </p>
+          <div className="space-y-4">
+            <Field label="URL Embed Google Maps">
+              <input
+                value={form.peta_embed_url}
+                onChange={(e) => setForm({ ...form, peta_embed_url: e.target.value })}
+                className={inputCls}
+                placeholder="Tempel kode embed atau URL maps di sini"
+              />
+            </Field>
+            {form.peta_embed_url.trim() !== "" && petaEmbedPreview === "" && (
+              <div className="flex items-start gap-2 bg-error/10 text-error rounded-lg px-4 py-3 text-sm">
+                <span className="material-symbols-outlined text-[18px] mt-0.5">warning</span>
+                <p className="leading-relaxed">
+                  Link ini tidak bisa ditampilkan sebagai peta (biasanya short link
+                  seperti <code>maps.app.goo.gl/...</code>). Salin kode embed dari
+                  Google Maps: buka lokasi → <b>Share</b> → <b>Embed a map</b> → copy
+                  seluruh kode HTML-nya ke kolom atas.
+                </p>
+              </div>
+            )}
+            {petaEmbedPreview !== "" && (
+              <div className="w-full h-[260px] rounded-lg overflow-hidden border border-outline-variant/30">
+                <iframe
+                  src={petaEmbedPreview}
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen=""
+                  loading="lazy"
+                  title="Preview Peta"
+                />
+              </div>
+            )}
           </div>
         </section>
 

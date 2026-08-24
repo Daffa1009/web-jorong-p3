@@ -10,7 +10,7 @@ export default async function ForumPage() {
   const topics = await getForumTopik();
 
   return (
-    <div className="max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop py-lg">
+    <div className="max-w-[1280px] mx-auto px-4 md:px-8 pt-[96px] pb-16">
       <ForumPageClient initialThreads={topics} />
     </div>
   );
