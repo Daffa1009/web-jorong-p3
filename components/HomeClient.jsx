@@ -52,19 +52,13 @@ export default function HomeClient({ produkPreview, galeriPreview, desaInfo }) {
       <HeroParallax
         imageUrl={heroImage}
         overlayClass=""
+        overlayStyle={{
+          background:
+            "linear-gradient(135deg, rgba(0,70,67,0.92) 0%, rgba(0,70,67,0.45) 100%)",
+        }}
       >
-        {/* Overlay gradient: Cyprus 90% kiri → 40% kanan */}
-        <div
-          className="absolute inset-0 z-10"
-          style={{
-            background:
-              "linear-gradient(135deg, rgba(0,70,67,0.92) 0%, rgba(0,70,67,0.45) 100%)",
-          }}
-          aria-hidden="true"
-        />
-
         {/* Hero Content */}
-        <div className="relative z-20 max-w-[1280px] mx-auto px-4 md:px-8 pt-28 pb-20 md:pt-36 md:pb-28 flex flex-col md:flex-row items-center gap-12 md:gap-16 min-h-screen">
+        <div className="relative z-20 w-full max-w-[1280px] mx-auto px-4 md:px-8 pt-28 pb-20 md:pt-36 md:pb-28 flex flex-col md:flex-row items-center gap-12 md:gap-16">
           {/* Left: Text */}
           <div className="flex-1 flex flex-col gap-6 text-left">
             {/* Badge */}
@@ -120,32 +114,6 @@ export default function HomeClient({ produkPreview, galeriPreview, desaInfo }) {
               </div>
             </ScrollReveal>
           </div>
-
-          {/* Right: Decorative photo (desktop only) */}
-          <ScrollReveal delay={0.2} direction="left" className="hidden md:block flex-shrink-0">
-            <div
-              className="relative w-[360px] h-[420px] rounded-3xl overflow-hidden shadow-large"
-              style={{ transform: "rotate(-2deg)" }}
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={
-                  desaInfo?.fotoSejarahUrl ||
-                  "https://picsum.photos/720/840?random=77"
-                }
-                alt="Pemandangan Jorong Padang Panjang"
-                className="w-full h-full object-cover"
-              />
-              {/* subtle inner overlay */}
-              <div
-                className="absolute inset-0"
-                style={{
-                  background:
-                    "linear-gradient(to top, rgba(0,70,67,0.35) 0%, transparent 60%)",
-                }}
-              />
-            </div>
-          </ScrollReveal>
         </div>
       </HeroParallax>
 
@@ -182,16 +150,27 @@ export default function HomeClient({ produkPreview, galeriPreview, desaInfo }) {
         {/* ── SEJARAH SINGKAT SECTION ──────────────────────────── */}
         <section className="py-20 md:py-28 max-w-[1280px] mx-auto px-4 md:px-8">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16 items-center w-full">
-            {/* Foto kiri dengan frame dekoratif gold */}
+            {/* Foto kiri dengan frame dekoratif gold — klik menuju halaman Profil */}
             <ScrollReveal className="md:col-span-5">
-              <div className="sejarah-frame relative h-[300px] md:h-[400px] rounded-3xl overflow-hidden shadow-large group">
+              <Link
+                href="/profil"
+                aria-label="Buka halaman profil untuk membaca sejarah lengkap"
+                className="sejarah-frame relative block h-[300px] md:h-[400px] rounded-3xl overflow-hidden shadow-large group cursor-pointer focus-visible:outline-2 focus-visible:outline-primary"
+              >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   src={desaInfo?.fotoSejarahUrl || "https://picsum.photos/600/800?random=50"}
                   alt="Sejarah Jorong Padang Panjang Pariangan"
                 />
-              </div>
+                {/* Hint saat hover */}
+                <div className="absolute inset-0 flex items-center justify-center bg-primary/0 group-hover:bg-primary/25 transition-colors duration-300">
+                  <span className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-white text-sm font-semibold bg-black/55 backdrop-blur-sm opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
+                    Lihat Profil Desa
+                    <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+                  </span>
+                </div>
+              </Link>
             </ScrollReveal>
 
             {/* Konten kanan */}

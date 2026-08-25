@@ -7,7 +7,7 @@ import { useScroll, useTransform, motion, useReducedMotion } from "framer-motion
  * Mendukung prefers-reduced-motion untuk aksesibilitas.
  * Height: min-h-screen dengan overlay gradient Cyprus.
  */
-export default function HeroParallax({ imageUrl, children, overlayClass = "" }) {
+export default function HeroParallax({ imageUrl, children, overlayClass = "", overlayStyle }) {
   const { scrollY } = useScroll();
   const shouldReduceMotion = useReducedMotion();
 
@@ -15,7 +15,7 @@ export default function HeroParallax({ imageUrl, children, overlayClass = "" }) 
   const heroY = useTransform(scrollY, [0, 600], [0, shouldReduceMotion ? 0 : 180]);
 
   return (
-    <div className="relative w-full min-h-screen flex items-center justify-center overflow-hidden">
+    <div className="hero-aspect relative w-full flex items-center justify-center overflow-hidden">
       {/* Parallax background */}
       <motion.div
         style={{ y: heroY }}
@@ -32,6 +32,7 @@ export default function HeroParallax({ imageUrl, children, overlayClass = "" }) 
       {/* Overlay gradient Cyprus */}
       <div
         className={`absolute inset-0 z-10 ${overlayClass}`}
+        style={overlayStyle}
         aria-hidden="true"
       />
 

@@ -284,3 +284,24 @@ html {
 .link-underline-primary:hover::after {
   width: 110%;
 }
+
+/* ===========================================================
+   HERO ASPECT
+   - Mobile (true mobile view): full tinggi layar (min-h-screen)
+   - Tablet ke atas, termasuk HP mode-desktop: paksa rasio 16:9
+     sehingga tampilan konsisten dengan komputer.
+   =========================================================== */
+.hero-aspect {
+  min-height: 100vh;
+  aspect-ratio: auto;
+}
+@media (min-width: 768px) {
+  .hero-aspect {
+    min-height: 0;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    max-height: 100vh;
+  }
+}
+

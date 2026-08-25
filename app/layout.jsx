@@ -2,6 +2,7 @@ import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import DesktopHint from "@/components/DesktopHint";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -27,6 +28,11 @@ export const metadata = {
   },
 };
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
+
 export default function RootLayout({ children }) {
   return (
     <html lang="id" className={`${inter.variable} ${plusJakartaSans.variable}`}>
@@ -43,6 +49,7 @@ export default function RootLayout({ children }) {
         <Navbar />
         <main className="flex-grow">{children}</main>
         <Footer />
+        <DesktopHint />
       </body>
     </html>
   );
