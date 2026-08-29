@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Footer() {
   return (
@@ -17,11 +18,21 @@ export default function Footer() {
       <div className="relative max-w-[1280px] mx-auto px-4 md:px-8 pt-14 pb-10 grid grid-cols-1 md:grid-cols-3 gap-10">
         {/* Kolom 1: Brand + tagline + sosmed */}
         <div className="flex flex-col gap-4">
-          <div>
-            <span className="font-heading font-bold text-xl text-white block leading-snug">
-              Jorong Padang Panjang Pariangan
-            </span>
-            <span className="text-sm text-white/60 font-medium">Nagari Pariangan</span>
+          <div className="flex items-center gap-3">
+            <div className="relative w-12 h-12 shrink-0">
+              <Image
+                src="/logo_desa.png"
+                alt="Logo Desa Jorong Padang Panjang"
+                fill
+                className="object-contain drop-shadow-sm"
+              />
+            </div>
+            <div>
+              <span className="font-heading font-bold text-xl text-white block leading-snug">
+                Jorong Padang Panjang Pariangan
+              </span>
+              <span className="text-sm text-white/60 font-medium">Nagari Pariangan</span>
+            </div>
           </div>
           <p className="text-sm text-white/65 leading-relaxed max-w-xs">
             Portal resmi informasi dan pelayanan masyarakat Jorong Padang Panjang,

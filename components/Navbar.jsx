@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 
 const navLinks = [
@@ -46,11 +47,22 @@ export default function Navbar() {
         {/* Brand */}
         <Link
           href="/"
-          className={`font-heading font-bold text-xl leading-tight transition-colors duration-300 ${
-            solid ? "text-primary" : "text-white drop-shadow-sm"
-          }`}
+          className="flex items-center gap-3"
         >
-          Jorong Padang Panjang
+          <div className="relative w-10 h-10 md:w-12 md:h-12 shrink-0">
+            <Image
+              src="/logo_desa.png"
+              alt="Logo Desa Jorong Padang Panjang"
+              fill
+              className="object-contain drop-shadow-sm"
+              priority
+            />
+          </div>
+          <span className={`font-heading font-bold text-lg md:text-xl leading-tight transition-colors duration-300 hidden sm:block ${
+            solid ? "text-primary" : "text-white drop-shadow-sm"
+          }`}>
+            Jorong Padang Panjang
+          </span>
         </Link>
 
         {/* Desktop Nav */}
